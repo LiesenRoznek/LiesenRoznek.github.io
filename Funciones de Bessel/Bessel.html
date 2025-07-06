@@ -1,0 +1,82 @@
+<head>
+    <meta charset="utf-8">
+    <link rel = "icon" type = "image/png" href = "D:\Programación\Páginas web\Página Personal\LiesenRoznek.github.io\Nabla salmón.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Atractores</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@latest/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
+        }
+      }
+    </script>
+
+    <script type = "module" src="Bessel.js"></script>
+  </head>
+  <body>
+    <div id="container">
+        <div id="controls">
+            <h3>Membrana Circular - Coordenadas Polares</h3>
+            
+            <div class="control-group">
+                <label>Amplitud Radial:</label>
+                <input type="range" id="radialAmplitude" min="0" max="3" step="0.1" value="1">
+                <span id="radialAmpValue">1</span>
+            </div>
+            
+            <div class="control-group">
+                <label>Frecuencia Radial:</label>
+                <input type="range" id="radialFrequency" min="0.1" max="5" step="0.1" value="2">
+                <span id="radialFreqValue">2</span>
+            </div>
+            
+            <div class="control-group">
+                <label>Amplitud Angular:</label>
+                <input type="range" id="angularAmplitude" min="0" max="2" step="0.1" value="0.5">
+                <span id="angularAmpValue">0.5</span>
+            </div>
+            
+            <div class="control-group">
+                <label>Frecuencia Angular:</label>
+                <input type="range" id="angularFrequency" min="1" max="12" step="1" value="6">
+                <span id="angularFreqValue">6</span>
+            </div>
+            
+            <div class="control-group">
+                <label>Velocidad de Rotación:</label>
+                <input type="range" id="rotationSpeed" min="0" max="3" step="0.1" value="1">
+                <span id="rotationSpeedValue">1</span>
+            </div>
+            
+            <div class="control-group">
+                <label>Radio de la Membrana:</label>
+                <input type="range" id="membraneRadius" min="2" max="8" step="0.2" value="4">
+                <span id="radiusValue">4</span>
+            </div>
+            
+            <div class="control-group">
+                <button onclick="createRipple()">Ondas Concéntricas</button>
+                <button onclick="createSpiral()">Espiral</button>
+                <button onclick="createFlower()">Patrón Flor</button>
+            </div>
+            
+            <div class="control-group">
+                <button onclick="createRadialWaves()">Ondas Radiales</button>
+                <button onclick="resetMembrane()">Resetear</button>
+            </div>
+            
+            <div class="control-group">
+                <button onclick="toggleWireframe()">Toggle Wireframe</button>
+                <button onclick="changeColor()">Cambiar Color</button>
+            </div>
+        </div>
+        
+        <div id="info">
+            Click y arrastra para rotar la cámara<br>
+            Scroll para hacer zoom<br>
+            Usando coordenadas polares (r, θ)
+        </div>
+    </div>
+  </body>
