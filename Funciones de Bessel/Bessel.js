@@ -1,226 +1,108 @@
-import * as THREE from 'three';
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import {createScene , createCamera, createRenderer, handleResize, addLights, addAxesHelper, setupControls} from './config.js';
-
-// Variables globales
-const scene = createScene(); //Create scene
-const camera = createCamera(); // Create the camera
-const renderer = createRenderer(); // Adjusting the pixel ratio  
-let membrane;
-let polarCoordinates = [];
-let originalPositions = [];
-let time = 0;
-let animationParams = {
-    radialAmplitude: 1,
-    radialFrequency: 2,
-    angularAmplitude: 0.5,
-    angularFrequency: 6,
-    rotationSpeed: 1,
-    membraneRadius: 4,
-    waveVelocity: 1,
-};
-let isWireframe = false;
-let colorIndex = 0;
-const colors = [0x00ff88, 0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf9ca24, 0xf0932b];
-
-const gui = new GUI();
-gui.add( animationParams, 'radialAmplitude', 1, 3 ).step(1)//.onChange(value => animationParams.radialAmplitude = value);
-gui.add( animationParams, 'angularAmplitude', 0.1, 3 )//.onChange(value => animationParams.angularAmplitude = value);
-gui.open();
-const circleFolder  = gui.addFolder("Parameters")
-circleFolder.add( animationParams, "rotationSpeed", 0, 10).name("Rotación")
-circleFolder.open()
-
-// Inicializar la escena
-function init() {
+// besselj.js
+export function besselj(x, n) {
+    const M = Math;
     
-    handleResize(camera, renderer); // Adjust the size of the renderer when the windows resize
-    addLights(scene);// Add some lighting and exes
-    //addAxesHelper(scene); // Add the axes to the scene
-    const controls = setupControls(camera, renderer); // Mouse control
-
-    // Crear la membrana circular
-    createCircularMembrane();
-    setupControlListeners();
-
-    // Iniciar animación
-    animate();
-}
-
-function createCircularMembrane() {
-    // Crear geometría circular usando coordenadas polares
-    const radius = animationParams.membraneRadius;
-    const radialSegments = 32;
-    const angularSegments = 64;
-    
-    const vertices = [];
-    const indices = [];
-    const uvs = [];
-    
-    // Generar vértices en coordenadas polares
-    for (let r = 0; r <= radialSegments; r++) {
-        const rho = (r / radialSegments) * radius;
-        
-        for (let a = 0; a <= angularSegments; a++) {
-            const theta = (a / angularSegments) * Math.PI * 2;
-            
-            // Convertir a coordenadas cartesianas
-            const x = rho * Math.cos(theta);
-            const y = rho * Math.sin(theta);
-            const z = 0;
-            
-            vertices.push(x, y, z);
-            
-            // Guardar coordenadas polares para cada vértice
-            polarCoordinates.push({ r: rho, theta: theta });
-            
-            // UVs para textura
-            uvs.push(a / angularSegments, r / radialSegments);
-        }
+    function _horner(arr, v) { 
+        let z = 0;
+        for(let i = 0; i < arr.length; ++i) z = v * z + arr[i]; 
+        return z; 
     }
     
-    // Generar índices para los triángulos
-    for (let r = 0; r < radialSegments; r++) {
-        for (let a = 0; a < angularSegments; a++) {
-            const current = r * (angularSegments + 1) + a;
-            const next = current + angularSegments + 1;
-            
-            // Evitar triángulos degenerados en el centro
-            if (r === 0) {
-                indices.push(current, next, next + 1);
-            } else {
-                indices.push(current, next, current + 1);
-                indices.push(current + 1, next, next + 1);
+    function _bessel_iter(x, n, f0, f1, sign) {
+        if(n === 0) return f0;
+        if(n === 1) return f1;
+        const tdx = 2 / x;
+        let f2 = f1;
+        for(let o = 1; o < n; ++o) {
+            f2 = f1 * o * tdx + sign * f0;
+            f0 = f1; f1 = f2;
+        }
+        return f2;
+    }
+    
+    const W = 0.636619772;
+    
+    const b0_a1a = [57568490574.0, -13362590354.0, 651619640.7, -11214424.18, 77392.33017, -184.9052456].reverse();
+    const b0_a2a = [57568490411.0, 1029532985.0, 9494680.718, 59272.64853, 267.8532712, 1.0].reverse();
+    const b0_a1b = [1.0, -0.1098628627e-2, 0.2734510407e-4, -0.2073370639e-5, 0.2093887211e-6].reverse();
+    const b0_a2b = [-0.1562499995e-1, 0.1430488765e-3, -0.6911147651e-5, 0.7621095161e-6, -0.934935152e-7].reverse();
+    
+    function bessel0(x) {
+        let a=0, a1=0, a2=0, y = x * x;
+        if(x < 8) {
+            a1 = _horner(b0_a1a, y);
+            a2 = _horner(b0_a2a, y);
+            a = a1 / a2;
+        } else {
+            const xx = x - 0.785398164;
+            y = 64 / y;
+            a1 = _horner(b0_a1b, y);
+            a2 = _horner(b0_a2b, y);
+            a = M.sqrt(W/x)*(M.cos(xx)*a1-M.sin(xx)*a2*8/x);
+        }
+        return a;
+    }
+    
+    const b1_a1a = [72362614232.0, -7895059235.0, 242396853.1, -2972611.439, 15704.48260, -30.16036606].reverse();
+    const b1_a2a = [144725228442.0, 2300535178.0, 18583304.74, 99447.43394, 376.9991397, 1.0].reverse();
+    const b1_a1b = [1.0, 0.183105e-2, -0.3516396496e-4, 0.2457520174e-5, -0.240337019e-6].reverse();
+    const b1_a2b = [0.04687499995, -0.2002690873e-3, 0.8449199096e-5, -0.88228987e-6, 0.105787412e-6].reverse();
+    
+    function bessel1(x) {
+        let a=0, a1=0, a2=0, y = x*x;
+        const xx = M.abs(x) - 2.356194491;
+        if(Math.abs(x) < 8) {
+            a1 = x*_horner(b1_a1a, y);
+            a2 = _horner(b1_a2a, y);
+            a = a1 / a2;
+        } else {
+            y = 64 / y;
+            a1=_horner(b1_a1b, y);
+            a2=_horner(b1_a2b, y);
+            a=M.sqrt(W/M.abs(x))*(M.cos(xx)*a1-M.sin(xx)*a2*8/M.abs(x));
+            if(x < 0) a = -a;
+        }
+        return a;
+    }
+    
+    // Función interna para hacer la recursión
+    function besselj_internal(x, n) {
+        n = Math.round(n);
+        if(!isFinite(x)) return isNaN(x) ? x : 0;
+        if(n < 0) return ((n%2)?-1:1)*besselj_internal(x, -n);
+        if(x < 0) return ((n%2)?-1:1)*besselj_internal(-x, n);
+        if(n === 0) return bessel0(x);
+        if(n === 1) return bessel1(x);
+        if(x === 0) return 0;
+        
+        let ret=0.0;
+        if(x > n) {
+            ret = _bessel_iter(x, n, bessel0(x), bessel1(x), -1);
+        } else {
+            const m=2*M.floor((n+M.floor(M.sqrt(40*n)))/2);
+            let jsum=false;
+            let bjp=0.0, sum=0.0;
+            let bj=1.0, bjm = 0.0;
+            const tox = 2 / x;
+            for (let j=m;j>0;j--) {
+                bjm=j*tox*bj-bjp;
+                bjp=bj;
+                bj=bjm;
+                if (M.abs(bj) > 1E10) {
+                    bj *= 1E-10;
+                    bjp *= 1E-10;
+                    ret *= 1E-10;
+                    sum *= 1E-10;
+                }
+                if (jsum) sum += bj;
+                jsum=!jsum;
+                if (j == n) ret=bjp;
             }
+            sum=2.0*sum-bj;
+            ret /= sum;
         }
+        return ret;
     }
     
-    // Crear geometría
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-    geometry.setIndex(indices);
-    geometry.computeVertexNormals();
-    
-    // Guardar posiciones originales
-    originalPositions = vertices.slice();
-    
-    // Material
-    const material = new THREE.MeshPhongMaterial({
-        color: colors[colorIndex],
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.8,
-        shininess: 100
-    });
-
-    // Crear mesh
-    membrane = new THREE.Mesh(geometry, material);
-    membrane.rotation.x = -Math.PI / 2;
-    membrane.receiveShadow = true;
-    membrane.castShadow = true;
-    
-    scene.add(membrane);
+    return besselj_internal(x, n);
 }
-
-
-function setupControlListeners() {
-    document.getElementById('radialAmplitude').addEventListener('input', (e) => {
-        animationParams.radialAmplitude = parseFloat(e.target.value);
-        document.getElementById('radialAmpValue').textContent = e.target.value;
-    });
-
-    document.getElementById('radialFrequency').addEventListener('input', (e) => {
-        animationParams.radialFrequency = parseFloat(e.target.value);
-        document.getElementById('radialFreqValue').textContent = e.target.value;
-    });
-
-    document.getElementById('angularAmplitude').addEventListener('input', (e) => {
-        animationParams.angularAmplitude = parseFloat(e.target.value);
-        document.getElementById('angularAmpValue').textContent = e.target.value;
-    });
-
-    document.getElementById('angularFrequency').addEventListener('input', (e) => {
-        animationParams.angularFrequency = parseFloat(e.target.value);
-        document.getElementById('angularFreqValue').textContent = e.target.value;
-    });
-
-    document.getElementById('rotationSpeed').addEventListener('input', (e) => {
-        animationParams.rotationSpeed = parseFloat(e.target.value);
-        document.getElementById('rotationSpeedValue').textContent = e.target.value;
-    });
-
-    document.getElementById('membraneRadius').addEventListener('input', (e) => {
-        animationParams.membraneRadius = parseFloat(e.target.value);
-        document.getElementById('radiusValue').textContent = e.target.value;
-        recreateMembrane();
-    });
-}
-
-function recreateMembrane() {
-    scene.remove(membrane);
-    polarCoordinates = [];
-    createCircularMembrane();
-}
-
-function deformMembrane() {
-    const positions = membrane.geometry.attributes.position.array;
-    
-    for (let i = 0; i < polarCoordinates.length; i++) {
-        const polar = polarCoordinates[i];
-        const r = polar.r;
-        const theta = polar.theta;
-        
-        // Aplicar deformaciones usando coordenadas polares
-        const radialWave = Math.sin(r * animationParams.radialFrequency + time * animationParams.rotationSpeed) * animationParams.radialAmplitude;
-        const angularWave = Math.cos(theta * animationParams.angularFrequency + time * animationParams.rotationSpeed) * animationParams.angularAmplitude;
-        
-        // Combinar ondas radiales y angulares
-        const z = radialWave * (1 - r / animationParams.membraneRadius) + angularWave * Math.sin(r * 0.5);
-        
-        positions[i * 3 + 2] = z;
-    }
-    
-    membrane.geometry.attributes.position.needsUpdate = true;
-    membrane.geometry.computeVertexNormals();
-}
-
-
-function resetMembrane() {
-    const positions = membrane.geometry.attributes.position.array;
-    
-    for (let i = 0; i < positions.length; i += 3) {
-        positions[i] = originalPositions[i];
-        positions[i + 1] = originalPositions[i + 1];
-        positions[i + 2] = originalPositions[i + 2];
-    }
-    
-    membrane.geometry.attributes.position.needsUpdate = true;
-    membrane.geometry.computeVertexNormals();
-}
-
-function toggleWireframe() {
-    isWireframe = !isWireframe;
-    membrane.material.wireframe = isWireframe;
-}
-
-function changeColor() {
-    colorIndex = (colorIndex + 1) % colors.length;
-    membrane.material.color.setHex(colors[colorIndex]);
-}
-
-function animate() {
-    requestAnimationFrame(animate);
-    
-    time += 0.01;
-    
-    // Deformar la membrana usando coordenadas polares
-    deformMembrane();
-    
-    // Renderizar
-    renderer.render(scene, camera);
-}
-
-
-// Inicializar cuando se carga la página
-init();
