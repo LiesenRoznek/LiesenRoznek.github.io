@@ -8,7 +8,7 @@ export function createScene(){
 // Create the camera
 export function createCamera() {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const d = 5
+  const d = 50
   camera.position.x = d;
   camera.position.y = d;
   camera.position.z = d;
@@ -41,23 +41,42 @@ export function handleResize(camera, renderer) {
 
 //Adds light
 export function addLights(scene) {
-  const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+  //const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+  //scene.add(ambientLight);
+
+  //const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  //directionalLight.position.set(10, 10, 10);
+
+  //directionalLight.castShadow = true;
+  //directionalLight.shadow.mapSize.set(2048, 2048);
+  // Area of the light. Erase when performance is needed
+  //directionalLight.shadow.camera.near = 1;
+  //directionalLight.shadow.camera.far = 100;
+  //directionalLight.shadow.camera.left = -20;
+  //directionalLight.shadow.camera.right = 20;
+  //directionalLight.shadow.camera.top = 20;
+  //directionalLight.shadow.camera.bottom = -20;
+
+  //scene.add(directionalLight);
+  // Luz ambiental
+  const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
   scene.add(ambientLight);
 
+  // Luz direccional
+  //const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  //directionalLight.position.set(20, 20, 25);
+  //directionalLight.castShadow = true;
+  //directionalLight.shadow.mapSize.width = 2048;
+  //directionalLight.shadow.mapSize.height = 2048;
   const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  directionalLight.position.set(10, 10, 10);
-
-  directionalLight.castShadow = true;
-  directionalLight.shadow.mapSize.set(2048, 2048);
-  // Area of the light. Erase when performance is needed
-  directionalLight.shadow.camera.near = 1;
-  directionalLight.shadow.camera.far = 100;
-  directionalLight.shadow.camera.left = -20;
-  directionalLight.shadow.camera.right = 20;
-  directionalLight.shadow.camera.top = 20;
-  directionalLight.shadow.camera.bottom = -20;
-
+  directionalLight.position.set(15, 5, 5);
   scene.add(directionalLight);
+  //scene.add(directionalLight);
+
+  // Luz puntual para efectos
+  const pointLight = new THREE.PointLight(0x00ff88, 1, 100);
+  pointLight.position.set(0, 8, 0);
+  scene.add(pointLight);
 }
 
 export function addAxesHelper(scene, size = 2) {

@@ -33,7 +33,8 @@ const besselZeros = {
   6: [9.9361, 13.5893, 17.0038, 20.3208, 23.5830]
 };
 
-let isWireframe = false;
+let isWireframe = true;
+
 let colorIndex = 0;
 const colors = [0x00ff88, 0xff6b6b, 0x4ecdc4, 0xf9ca24, 0xf0932b];
 
@@ -42,9 +43,11 @@ const colors = [0x00ff88, 0xff6b6b, 0x4ecdc4, 0xf9ca24, 0xf0932b];
 const gui = new GUI();
 gui.open();
 const circleFolder  = gui.addFolder("Parameters")
-circleFolder.add( animationParams, "rotationSpeed", 0, 10).name("Rotación")
+circleFolder.add( animationParams, "radialAmplitude", 0.5, 3).name("Amplitud")
 circleFolder.add( animationParams, "angularMode", 0, 6).name("Modo angular").step(1)
 circleFolder.add( animationParams, "radialMode", 1, 5).name("Modo radial").step(1)
+circleFolder.add( animationParams, "waveVelocity", 0.01, 2).name("Velocidad de onda")
+//circleFolder.add( animationParams, "radialAmplitude", 0.5, 2).name("Velocidad de onda")
 circleFolder.add({ cambiar: changeColor }, 'cambiar').name('Cambiar Color');
 circleFolder.add({toggle: toggleWireframe }, "toggle").name("Alternar estructura")
 circleFolder.open()
@@ -59,7 +62,6 @@ function init() {
 
     // Crear la membrana circular
     createCircularMembrane();
-    setupControlListeners();
 
     // Iniciar animación
     animate();
@@ -126,10 +128,11 @@ function createCircularMembrane() {
     // Material
     const material = new THREE.MeshPhongMaterial({
         color: colors[colorIndex],
+        specular: 0xffffff,
         side: THREE.DoubleSide,
         transparent: true,
         opacity: 0.8,
-        shininess: 100
+        shininess: 150
     });
 
     // Crear mesh
@@ -137,41 +140,9 @@ function createCircularMembrane() {
     membrane.rotation.x = -Math.PI / 2;
     membrane.receiveShadow = true;
     membrane.castShadow = true;
+    membrane.material.wireframe = true;
     
     scene.add(membrane);
-}
-
-function setupControlListeners() {
-    document.getElementById('radialAmplitude').addEventListener('input', (e) => {
-        animationParams.radialAmplitude = parseFloat(e.target.value);
-        document.getElementById('radialAmpValue').textContent = e.target.value;
-    });
-
-    document.getElementById('radialFrequency').addEventListener('input', (e) => {
-        animationParams.radialFrequency = parseFloat(e.target.value);
-        document.getElementById('radialFreqValue').textContent = e.target.value;
-    });
-
-    document.getElementById('angularAmplitude').addEventListener('input', (e) => {
-        animationParams.angularAmplitude = parseFloat(e.target.value);
-        document.getElementById('angularAmpValue').textContent = e.target.value;
-    });
-
-    document.getElementById('angularFrequency').addEventListener('input', (e) => {
-        animationParams.angularFrequency = parseFloat(e.target.value);
-        document.getElementById('angularFreqValue').textContent = e.target.value;
-    });
-
-    document.getElementById('rotationSpeed').addEventListener('input', (e) => {
-        animationParams.rotationSpeed = parseFloat(e.target.value);
-        document.getElementById('rotationSpeedValue').textContent = e.target.value;
-    });
-
-    document.getElementById('membraneRadius').addEventListener('input', (e) => {
-        animationParams.membraneRadius = parseFloat(e.target.value);
-        document.getElementById('radiusValue').textContent = e.target.value;
-        recreateMembrane();
-    });
 }
 
 function recreateMembrane() {
@@ -197,19 +168,15 @@ function deformMembrane() {
         const r = polar.r;
         const theta = polar.theta;
         
-        // Aplicar deformaciones usando coordenadas polares
-        const radialWave = Math.sin(r * animationParams.radialFrequency + time * animationParams.rotationSpeed) * animationParams.radialAmplitude;
-        const angularWave = Math.cos(theta * animationParams.angularFrequency + time * animationParams.rotationSpeed) * animationParams.angularAmplitude;
-        
-         //
         const c = animationParams.waveVelocity; //Velocidad de onda
         const m = animationParams.angularMode; //
         const n = animationParams.radialMode;
         const lambda = besselZeros[m][n-1]; // 
         const a = animationParams.membraneRadius //Circle radius
+        const A = animationParams.radialAmplitude //Radial Amplitude
 
         // Combinar ondas radiales y angulares
-        const z = besselj(lambda*r/a, m)*angular(m, theta)*temporal(c, lambda, time);
+        const z = A* besselj(lambda*r/a, m)*angular(m, theta)*temporal(c, lambda, time);
         //const z = radialWave * (1 - r / animationParams.membraneRadius) + angularWave * Math.sin(r * 0.5);
         
         positions[i * 3 + 2] = z;
@@ -233,6 +200,7 @@ function resetMembrane() {
     membrane.geometry.computeVertexNormals();
 }
 
+//membrane.material.wireframe = true;
 function toggleWireframe() {
     isWireframe = !isWireframe;
     membrane.material.wireframe = isWireframe;
@@ -254,8 +222,6 @@ function animate() {
     // Renderizar
     renderer.render(scene, camera);
 }
-
-
 
 
 // Inicializar cuando se carga la página
