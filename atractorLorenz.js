@@ -1,6 +1,15 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
+
+export function mountLorenz(container) {
+//Will start the variables of the system
+const dt = 0.008;
+const alfa = 10; 
+const gamma = 8/3;
+const beta = 28;
+
+
 var scene = new THREE.Scene();
 
 // Create the camera
@@ -9,22 +18,27 @@ camera.position.z = 50;
 camera.position.x = -60;
 camera.position.y = 80;
 
-
-
 // Adjusting the pixel ratio
-var renderer = new THREE.WebGLRenderer({ antialias: true });
+/* var renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+
+document.body.appendChild(renderer.domElement); */
+//const div = document.querySelector(".anim-view");
+const canvas = document.createElement("canvas");
+container.appendChild(canvas);
+var renderer = new THREE.WebGLRenderer({ canvas, antialias: true});
+renderer.setSize(container.clientWidth, container.clientHeight);
+
 renderer.setPixelRatio(window.devicePixelRatio);
-document.body.appendChild(renderer.domElement);
 
 // Ajustar el tamaño del renderizador cuando se redimensiona la ventana
 window.addEventListener('resize', function () {
-    var newWidth = window.innerWidth;
-    var newHeight = window.innerHeight;
+    /* var newWidth = window.innerWidth;
+    var newHeight = window.innerHeight; */
 
-    camera.aspect = newWidth / newHeight;
+    camera.aspect = div.clientWidth / div.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(newWidth, newHeight);
+    renderer.setSize(div.clientWidth , div.clientHeight);
 });
 
 // Crear los ejes coordenados
@@ -38,11 +52,7 @@ controls.minDistance = 2;
 controls.maxDistance = 500;
 controls.update();
 
-//Will start the variables of the system
-var dt = 0.008;
-var alfa = 10; 
-var gamma = 8/3;
-var beta = 28;
+
 
 var x = 2;
 var y = 1; 
@@ -56,7 +66,7 @@ var trailPoints = [
   new THREE.Vector3(x, y, z),
 ];
 
-for (var i = 0; i < 60*60*5; i++){
+for (var i = 0; i < 60*60; i++){
   var dx = alfa * (z - x);
   var dz = x * (beta - y) - z; 
   var dy = x * z - gamma * y;
@@ -79,10 +89,10 @@ scene.add(ball);
 
 const traceMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
 var suavidad = 0;
-
+renderer.setClearColor(0x222222, 1);
 
 // Animate the scene
-var animate = function () {
+function animate() {
   requestAnimationFrame(animate);
   if (estela.length > 0) {
     var currentVector = estela.shift();
@@ -105,4 +115,4 @@ var animate = function () {
 };
 
 animate()
-
+}
