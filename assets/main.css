@@ -1,13 +1,17 @@
 
 body, html {
-  background: linear-gradient(315deg, #000000 0%, #150918 100%);
-  color: #f4e9ff;
+  background: linear-gradient(315deg, #b11515 0%, #af13d6 100%);
+  color: #300061;
   font-family: 'Inter', sans-serif;
 }
 
 @font-face {
   font-family: "Computer Modern Serif", serif;
+  src: url("ComputerModernSerif-Regular.ttf") format("truetype");
+  font-style: normal;
 }
+
+
 
 main, .wrap {
   margin: auto;
@@ -35,14 +39,15 @@ button, .button {
 }
 
 button:hover, .button:hover {
-  background: #394E60;
+  background: #115896;
   color: white;
 }
 
 h1 {
-  font-size: 30px;
+  font-family: 'Computer Modern Serif', serif;
+  font-size: 50px;
   line-height: 32px;
-  color: #c2bbc5;
+  color: #8907c0;
   font-weight: 500;
   letter-spacing: -0.6px;
   margin: 0 0 16px;
@@ -54,7 +59,7 @@ h2 {
   color: #fff;
   letter-spacing: -0.7px;
   margin: 0 0 24px;
-  font-family: 'AmstelvarAlpha', normal;
+  font-family: 'Computer Modern Serif', serif;
 }
 
 p {

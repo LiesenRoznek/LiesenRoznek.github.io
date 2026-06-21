@@ -22,7 +22,7 @@
     <h1> Atractor de Lorenz </h1>
     <p> Hola a todos. Les muestro este programa que se encarga de graficar los atractores de Lorenz. Estas figuras se originan de graficar sistemas dinámicos caóticos. <br> Como propiedad de resaltar, estas figuras tienen aspecto de fractal.</p>
     <div class = "anim-view" > </div>
-    <a href="index.html" id="tribute-link" class="links"> Volver a casa</a>
+    <a href="..\index.html" id="tribute-link" class="links"> Volver a casa</a>
     $$\frac{dx}{dt} = \sigma(y - x)\\
     \frac{dy}{dt} = x(\rho - z) - y\\
     \frac{dz}{dt} = xy - \beta z
@@ -32,8 +32,6 @@
       const div = document.querySelector(".anim-view");
       mountLorenz(div);
     </script>
-    <footer>
-      <p> César Bracamonte, 2024 </p>
-    </footer>
+  
   </body>
 </html>
