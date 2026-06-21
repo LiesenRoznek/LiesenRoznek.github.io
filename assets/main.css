@@ -1,0 +1,121 @@
+
+body, html {
+  background: linear-gradient(315deg, #000000 0%, #150918 100%);
+  color: #f4e9ff;
+  font-family: 'Inter', sans-serif;
+}
+
+@font-face {
+  font-family: "Computer Modern Serif", serif;
+}
+
+main, .wrap {
+  margin: auto;
+  display: block;
+  max-width: 960px;
+  padding: 24px;
+}
+
+nav.wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+button, .button {
+  background: #146DB8;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-family: inherit;
+  text-decoration: none;
+  transition: background .2s ease;
+}
+
+button:hover, .button:hover {
+  background: #394E60;
+  color: white;
+}
+
+h1 {
+  font-size: 30px;
+  line-height: 32px;
+  color: #c2bbc5;
+  font-weight: 500;
+  letter-spacing: -0.6px;
+  margin: 0 0 16px;
+}
+
+h2 {
+  font-size: 32px;
+  line-height: 36px;
+  color: #fff;
+  letter-spacing: -0.7px;
+  margin: 0 0 24px;
+  font-family: 'AmstelvarAlpha', normal;
+}
+
+p {
+  font-size: 16px;
+  line-height: 22px;
+}
+
+a {
+  color: #8f71b4;
+}
+
+a:hover {
+  color: #ffe475;
+}
+
+br {
+  display: none;
+}
+
+section {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+article {
+  margin-bottom: 42px;
+}
+
+h3 {
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+  margin-left: 12px;
+}
+
+h4 {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: bold;
+  color: #000000;
+  margin-left: 12px;
+}
+
+h5 {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  margin-left: 12px;
+}
+
+li {
+  margin-bottom: 12px;
+}
+
+.big h1 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.big h2 {
+  font-size: 36px;
+  line-height: 40px;
+  word-break: break-word;
+}
