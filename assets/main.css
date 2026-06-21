@@ -1,7 +1,7 @@
 
 body, html {
   background: linear-gradient(315deg, #b11515 0%, #af13d6 100%);
-  color: #300061;
+  color: #1f8027;
   font-family: 'Inter', sans-serif;
 }
 
@@ -56,7 +56,7 @@ h1 {
 h2 {
   font-size: 32px;
   line-height: 36px;
-  color: #fff;
+  color: #d11111;
   letter-spacing: -0.7px;
   margin: 0 0 24px;
   font-family: 'Computer Modern Serif', serif;
