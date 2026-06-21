@@ -13,17 +13,12 @@ const beta = 28;
 var scene = new THREE.Scene();
 
 // Create the camera
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 200);
 camera.position.z = 50;
 camera.position.x = -60;
 camera.position.y = 80;
 
-// Adjusting the pixel ratio
-/* var renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
 
-document.body.appendChild(renderer.domElement); */
-//const div = document.querySelector(".anim-view");
 const canvas = document.createElement("canvas");
 container.appendChild(canvas);
 var renderer = new THREE.WebGLRenderer({ canvas, antialias: true});
@@ -33,23 +28,18 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // Ajustar el tamaño del renderizador cuando se redimensiona la ventana
 window.addEventListener('resize', function () {
-    /* var newWidth = window.innerWidth;
-    var newHeight = window.innerHeight; */
-
-    camera.aspect = div.clientWidth / div.clientHeight;
+    camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(div.clientWidth , div.clientHeight);
+    renderer.setSize(container.clientWidth , container.clientHeight);
 });
 
-// Crear los ejes coordenados
-var axesHelper = new THREE.AxesHelper(2);
-scene.add(axesHelper);
+
 
 // Mouse control
 const controls = new OrbitControls(camera, renderer.domElement );
 controls.target.set(0 , 0, 1 );
-controls.minDistance = 2;
-controls.maxDistance = 500;
+controls.minDistance = 0.1;
+controls.maxDistance = 200;
 controls.update();
 
 
@@ -66,7 +56,7 @@ var trailPoints = [
   new THREE.Vector3(x, y, z),
 ];
 
-for (var i = 0; i < 60*60; i++){
+for (var i = 0; i < 60*360; i++){
   var dx = alfa * (z - x);
   var dz = x * (beta - y) - z; 
   var dy = x * z - gamma * y;
@@ -80,35 +70,51 @@ for (var i = 0; i < 60*60; i++){
 
 console.log(estela)
 
-
+// Creates the geometry of the ball object
 const ballGeometry = new THREE.SphereGeometry(1, 32, 16);
 var ball = new THREE.Mesh(ballGeometry, new THREE.MeshBasicMaterial({ color: 0x00ffff }));
 var initialPosition = new THREE.Vector3(x, y, z);
 ball.position.copy(initialPosition);
 scene.add(ball);
 
+//Creates the line material
 const traceMaterial = new THREE.LineBasicMaterial( { color: 0xff0000 } );
-var suavidad = 0;
 renderer.setClearColor(0x222222, 1);
+
+const totalPuntos = estela.length;
+const positions = new Float32Array(totalPuntos*3);
+
+//changed the drawing pattern for better performance
+const traceGeometry = new THREE.BufferGeometry();
+traceGeometry.setAttribute('position', 
+  new THREE.BufferAttribute(positions, 3)
+);
+
+const curva = new THREE.Line(traceGeometry, traceMaterial);
+curva.frustumCulled = false;
+scene.add(curva);
+
+
+let puntosDibujados = 0;
 
 // Animate the scene
 function animate() {
   requestAnimationFrame(animate);
+
   if (estela.length > 0) {
-    var currentVector = estela.shift();
-    ball.position.set(currentVector.x, currentVector.y, currentVector.z);
+    const v = estela.shift();
+    ball.position.copy(v);
+
+    positions[puntosDibujados*3] = v.x;
+    positions[puntosDibujados*3 + 1] = v.y;
+    positions[puntosDibujados*3 + 2] = v.z;
+
+    puntosDibujados++;
+
+    traceGeometry.setDrawRange(0, puntosDibujados);
+    traceGeometry.attributes.position.needsUpdate = true;
   }
-
-  trailPoints.push(new THREE.Vector3( ball.position.x, ball.position.y, ball.position.z));
-  var trace = new THREE.CatmullRomCurve3( trailPoints);
-  suavidad ++;
-  var puntos = trace.getPoints( suavidad );
-  var traceGeometry = new THREE.BufferGeometry().setFromPoints( puntos );
-
-  var curva = new THREE.Line( traceGeometry, traceMaterial );
-  scene.remove(scene.getObjectByName("curva"));
-  curva.name = "curva";
-  scene.add(curva)
+ 
 
   renderer.render(scene, camera);
   

@@ -5,6 +5,7 @@
     <link rel = "icon" type = "image/png" href = "Nabla salmón.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Atractores</title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 
     <script type="importmap">
       {
@@ -20,11 +21,19 @@
   <body>
     <h1> Atractor de Lorenz </h1>
     <p> Hola a todos. Les muestro este programa que se encarga de graficar los atractores de Lorenz. Estas figuras se originan de graficar sistemas dinámicos caóticos. <br> Como propiedad de resaltar, estas figuras tienen aspecto de fractal.</p>
-    <div class = "anim-view" style="width: 100%; height: 500px;"> </div>
+    <div class = "anim-view" > </div>
+    <a href="index.html" id="tribute-link" class="links"> Volver a casa</a>
+    $$\frac{dx}{dt} = \sigma(y - x)\\
+    \frac{dy}{dt} = x(\rho - z) - y\\
+    \frac{dz}{dt} = xy - \beta z
+    $$
     <script type="module">
       import {mountLorenz} from './atractorLorenz.js';
       const div = document.querySelector(".anim-view");
       mountLorenz(div);
     </script>
+    <footer>
+      <p> César Bracamonte, 2024 </p>
+    </footer>
   </body>
 </html>
