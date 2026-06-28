@@ -90,5 +90,8 @@ button:hover, .button:hover {
   color: white;
 }
 
-
+.anim-view {
+  width: 60%;
+  height: 1200px;
+}
 

@@ -8,7 +8,7 @@ title: Bessel
 <h1>Funciones de Bessel</h1>
 <p> Les presento esta demostracion grafica de las funciones de Bessel, tambien conocidas como funciones cilindricas.
     <br>Aqui vemos una de las aplicaciones de estas famosas funciones, 
-    la vibracion de una membrana elastica circular. <br>
+    la vibracion de una membrana elástica circular. <br>
     Esto se puede ver al golpear un tambor, un platillo de bateria o un una gota cayendo en el agua.
 </p>
 <div id="info">
@@ -16,10 +16,10 @@ title: Bessel
         Scroll para hacer zoom<br>
 </div>
 <a href="../index.html" id="tribute-link" class="links"> Volver a casa</a>
-<div class=".anim-view"></div>
+<div class="anim-view"></div>
     
 <script type="module">
   import {mountCircularMembrane} from './FuncionesBessel.js';
-  const div = document.querySelector(".anim-view");
-  mountLorenz(div);
+  const animWindow = document.querySelector(".anim-view");
+  mountCircularMembrane(animWindow);
 </script>

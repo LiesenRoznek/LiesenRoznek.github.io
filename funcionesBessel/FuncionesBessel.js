@@ -1,15 +1,37 @@
 import * as THREE from 'three';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import {createScene , createCamera, createRenderer, handleResize, addLights, addAxesHelper, setupControls} from '../assets/shared.js';
+import {createScene , createCamera, createRenderer, handleResize, addLights, setupControls} from '../assets/shared.js';
 import {besselj} from './bessel.js';
 
 
 
 // Variables globales
 export function mountCircularMembrane(container) {
+
+
 const scene = createScene(); //Create scene
-const camera = createCamera(); // Create the camera
-const renderer = createRenderer(); // Adjusting the pixel ratio  
+// Create the camera
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.z = 50;
+camera.position.x = -60;
+camera.position.y = 80;
+
+
+const canvas = document.createElement("canvas");
+container.appendChild(canvas);
+var renderer = new THREE.WebGLRenderer({ canvas, antialias: true});
+renderer.setSize(container.clientWidth, container.clientHeight);
+
+renderer.setPixelRatio(window.devicePixelRatio);
+
+// Ajustar el tamaño del renderizador cuando se redimensiona la ventana
+window.addEventListener('resize', function () {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth , container.clientHeight);
+});
+
+
 let membrane;
 let polarCoordinates = [];
 let originalPositions = [];
