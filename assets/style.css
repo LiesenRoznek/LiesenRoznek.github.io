@@ -1,0 +1,94 @@
+@font-face {
+  font-family: "CMserif";
+  src: url("NewCM08-Book.otf") format("opentype");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "CMserifItalic";
+  src: url("NewCM08-BookItalic.otf") format("opentype");
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "CMsans";
+  src: url("NewCMSans10-Regular.otf") format("opentype");
+  font-style: normal;
+}
+
+
+
+body, html {
+  font-family: 'CMserif';
+  background: linear-gradient(315deg, #2702ad 0%, #000000 100%);
+  color: #ffffff;
+}
+
+h1 {
+  font-family: 'CMsans';
+  font-size: 50px;
+  line-height: 32px;
+  color: #dddddd;
+  font-weight: 500;
+  letter-spacing: -0.6px;
+  margin: 0 0 16px;
+}
+
+h2 {
+  font-family: "CMserif";
+  font-size: 32px;
+  line-height: 36px;
+  color: #ffffff;
+  letter-spacing: -0.7px;
+  margin: 0 0 24px;
+}
+
+p {
+  font-family: 'CMserif';
+  color:aqua;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+a {
+  color: #8f71b4;
+}
+
+a:hover {
+  color: #ffe475;
+}
+
+h3 {
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+  margin-left: 12px;
+}
+
+h4 {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: bold;
+  color: #000000;
+  margin-left: 12px;
+}
+
+
+button, .button {
+  background: #146DB8;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-family: inherit;
+  text-decoration: none;
+  transition: background .2s ease;
+}
+
+button:hover, .button:hover {
+  background: #115896;
+  color: white;
+}
+
+
+

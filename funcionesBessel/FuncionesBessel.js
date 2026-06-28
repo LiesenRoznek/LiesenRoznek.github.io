@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import {createScene , createCamera, createRenderer, handleResize, addLights, addAxesHelper, setupControls} from '../Utilities/config.js';
+import {createScene , createCamera, createRenderer, handleResize, addLights, addAxesHelper, setupControls} from '../assets/shared.js';
 import {besselj} from './bessel.js';
 
 
+
 // Variables globales
+export function mountCircularMembrane(container) {
 const scene = createScene(); //Create scene
 const camera = createCamera(); // Create the camera
 const renderer = createRenderer(); // Adjusting the pixel ratio  
@@ -226,3 +228,4 @@ function animate() {
 
 // Inicializar cuando se carga la página
 init();
+}

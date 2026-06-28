@@ -1,37 +1,19 @@
-<!DOCTYPE html>
-<html lang="">
-  <head>
-    <meta charset="utf-8">
-    <link rel = "icon" type = "image/png" href = "Nabla salmón.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Atractores</title>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+---
+layout: default
+title: Atractor de lorenz
+---
 
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@latest/build/three.module.js",
-          "three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
-        }
-      }
-    </script>
-    <!-- <script type = "module" src="atractor de lorenz.js"></script> -->
-    
-  </head>
-  <body>
-    <h1> Atractor de Lorenz </h1>
-    <p> Hola a todos. Les muestro este programa que se encarga de graficar los atractores de Lorenz. Estas figuras se originan de graficar sistemas dinámicos caóticos. <br> Como propiedad de resaltar, estas figuras tienen aspecto de fractal.</p>
-    <div class = "anim-view" > </div>
-    <a href="..\index.html" id="tribute-link" class="links"> Volver a casa</a>
-    $$\frac{dx}{dt} = \sigma(y - x)\\
-    \frac{dy}{dt} = x(\rho - z) - y\\
-    \frac{dz}{dt} = xy - \beta z
-    $$
-    <script type="module">
-      import {mountLorenz} from './atractorLorenz.js';
-      const div = document.querySelector(".anim-view");
-      mountLorenz(div);
-    </script>
-  
-  </body>
-</html>
+<h1> Atractor de Lorenz </h1>
+<p> Hola a todos. Les muestro este programa que se encarga de graficar los atractores de Lorenz. Estas figuras se originan de graficar sistemas dinámicos caóticos. <br> Como propiedad de resaltar, estas figuras tienen aspecto de fractal.</p>
+<div class = "anim-view" > </div>
+<a href="..\index.html" id="tribute-link" class="links"> Volver a casa</a>
+$$\frac{dx}{dt} = \sigma(y - x)\\
+\frac{dy}{dt} = x(\rho - z) - y\\
+\frac{dz}{dt} = xy - \beta z
+$$
+<script type="module">
+  import {mountLorenz} from './atractorLorenz.js';
+  const div = document.querySelector(".anim-view");
+  mountLorenz(div);
+</script>
+
